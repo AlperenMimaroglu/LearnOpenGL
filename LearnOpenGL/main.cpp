@@ -2,11 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-// Ideally this function should be moved to another source file
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void ProcessInput(GLFWwindow* window);
 
 int main()
 {
@@ -39,12 +36,31 @@ int main()
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
     {
+        ProcessInput(window);
+
+        // Rendering commands here
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Check and call events and swap the buffers
         glfwSwapBuffers(window);
-        
-        // Poll events such as keyboard inputs until close command is given
         glfwPollEvents();
     }
 
     glfwTerminate();
     return 0;
+}
+
+// Ideally this function should be moved to another source file
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+void ProcessInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
