@@ -83,10 +83,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="GLUtils.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="fragment.glsl" />
     <Content Include="vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
