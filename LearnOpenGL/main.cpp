@@ -35,10 +35,22 @@ int main()
     // This sets the OpenGL context size when window is resized.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // float verticesTriangles[] = {
+    //     -0.5f, -0.5f, 0.0f,
+    //     0.5f, -0.5f, 0.0f,
+    //     0.0f, 0.5f, 0.0f
+    // };
+
     float verticesTriangles[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        -0.4f, -0.4f, 0.0f,
+        0.0f, 0.4f, 0.0f,
+        -0.8f, 0.4f, 0.0f
+    };
+
+    float triangle2[] = {
+        0.0f, -0.4f, 0.0f,
+        0.8f, -0.4f, 0.0f,
+        0.4f, 0.4f, 0.0f
     };
 
     float verticesSquares[] = {
@@ -57,6 +69,8 @@ int main()
 
     const std::string pathToShader("fragment.glsl");
     GLuint fragmentShader = GLUtils::LoadShaderFromFile(pathToShader, GL_FRAGMENT_SHADER);
+
+    GLuint yellowFragment = GLUtils::LoadShaderFromFile(std::string("yellow.glsl"), GL_FRAGMENT_SHADER);
 
     const unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -77,8 +91,25 @@ int main()
         glDeleteProgram(shaderProgram);
     }
 
+
+    const unsigned int yellowShaderProgram = glCreateProgram();
+    glAttachShader(yellowShaderProgram, vertexShader);
+    glAttachShader(yellowShaderProgram, yellowFragment);
+    glLinkProgram(yellowShaderProgram);
+
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    glDeleteShader(yellowFragment);
+
+    glGetProgramiv(yellowShaderProgram, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        char infoLog[512];
+        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
+
+        glDeleteProgram(shaderProgram);
+    }
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -92,7 +123,7 @@ int main()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesSquares), verticesSquares, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesTriangles), verticesTriangles, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -100,9 +131,21 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
     glEnableVertexAttribArray(0);
 
+
+    unsigned int VAO2, VBO2;
+    glGenVertexArrays(1, &VAO2);
+    glGenBuffers(1, &VBO2);
+
+    glBindVertexArray(VAO2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle2), triangle2, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3,GL_FLOAT,GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
+    glEnableVertexAttribArray(0);
+
+
     // Wireframe mode
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
+
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
     {
@@ -115,8 +158,15 @@ int main()
         glUseProgram(shaderProgram);
 
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0); // Unbinds any bound VAO
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glUseProgram(yellowShaderProgram);
+
+        glBindVertexArray(VAO2);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glBindVertexArray(0); // Unbinds any bound VAO
 
         // Check and call events and swap the buffers
         glfwSwapBuffers(window);
@@ -127,7 +177,7 @@ int main()
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
-    
+
     glfwTerminate();
     return 0;
 }

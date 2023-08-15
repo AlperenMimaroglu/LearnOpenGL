@@ -89,6 +89,7 @@
   <ItemGroup>
     <Content Include="fragment.glsl" />
     <Content Include="vertex.glsl" />
+    <Content Include="yellow.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLUtils.h" />
