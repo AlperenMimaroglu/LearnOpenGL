@@ -6,10 +6,9 @@ in vec2 TexCoord;
 
 uniform sampler2D texture1;
 uniform sampler2D texture2;
-uniform float lerpAmount;
 
 void main()
 {
     FragColor = mix(texture(texture1, TexCoord),
-                    texture(texture2, TexCoord * 2), lerpAmount);
+                    texture(texture2, TexCoord * 2), 0.2f);
 }

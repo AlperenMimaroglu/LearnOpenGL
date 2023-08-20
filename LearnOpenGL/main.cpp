@@ -6,6 +6,10 @@
 #include "stb_image.h"
 #include "Texture.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void ProcessInput(GLFWwindow* window);
 
@@ -122,6 +126,13 @@ int main()
     ourShader.SetInt("texture1", 0);
     ourShader.SetInt("texture2", 1);
 
+    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+    // vec = trans * vec;
+    // std::cout << vec.x << vec.y << vec.z << std::endl;
+
+    unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
     {
@@ -131,6 +142,11 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(transformLoc, 1,GL_FALSE, glm::value_ptr(trans));
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1.ID);
         glActiveTexture(GL_TEXTURE1);
@@ -139,7 +155,18 @@ int main()
         glBindVertexArray(VAO);
         // glDrawArrays(GL_TRIANGLES, 0, 3);
 
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+        trans = glm::scale(trans, glm::vec3(cos((float)glfwGetTime()),
+                                            sin((float)glfwGetTime()),
+                                            1.0f));
+        glUniformMatrix4fv(transformLoc, 1,GL_FALSE, glm::value_ptr(trans));
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         glBindVertexArray(0); // Unbinds any bound VAO
 
         // Check and call events and swap the buffers
