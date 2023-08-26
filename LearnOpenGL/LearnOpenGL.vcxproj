@@ -96,6 +96,7 @@
     <Content Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="GLUtils.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Shader.h" />
