@@ -22,7 +22,7 @@ void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 #define SCREEN_HEIGHT 1000.0f
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.5f, 5.0f));
 bool firstMouse = true;
 
 float deltaTime = 0.0f; // Time between current frame and last frame
@@ -30,6 +30,9 @@ float lastFrame = 0.0f; // Time of last frame
 
 float lastX = SCREEN_WIDTH * 0.5f;
 float lastY = SCREEN_HEIGHT * 0.5f;
+
+// ------------Light Source------------
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
@@ -63,7 +66,7 @@ int main()
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     glEnable(GL_DEPTH_TEST);
 
-    Shader ourShader("vertex.glsl", "fragment.glsl");
+    Shader lightingShader("vertex.glsl", "fragment.glsl");
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -123,7 +126,6 @@ int main()
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -132,50 +134,19 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(2, 2,GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
 
-    // -------Texture---------
-    stbi_set_flip_vertically_on_load(true);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3,GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-    Texture texture1;
-    texture1.Load("container.jpg", true);
+    lightingShader.Use();
+    lightingShader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
+    lightingShader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-    // Texture texture2;
-    // texture1.Load("awesomeface.png", true);
-
-    unsigned int texture2;
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
-
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA,GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-
-
-    // Wireframe mode
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    ourShader.Use();
-    ourShader.SetInt("texture1", 0);
-    ourShader.SetInt("texture2", 1);
-
-    glEnable(GL_DEPTH_TEST);
+    Shader lightCubeShader("vertex.glsl", "light.glsl");
 
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
@@ -192,40 +163,40 @@ int main()
 
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // bind textures on corresponding texture units
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1.ID);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-
         // activate shader
-        ourShader.Use();
+        lightingShader.Use();
+
+        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        lightingShader.SetMat4("model", model);
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
                                                 0.1f, 100.0f);
-        ourShader.SetMat4("projection", projection);
+        lightingShader.SetMat4("projection", projection);
 
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
-        ourShader.SetMat4("view", view);
+        lightingShader.SetMat4("view", view);
 
         // render boxes
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            // calculate the model matrix for each object and pass it to shader before drawing
-            glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.SetMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        // Light Cube
+        lightCubeShader.Use();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f));
+        lightCubeShader.SetMat4("model", model);
+        lightCubeShader.SetMat4("projection", projection);
+        lightCubeShader.SetMat4("view", view);
+
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -280,6 +251,10 @@ void ProcessInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
