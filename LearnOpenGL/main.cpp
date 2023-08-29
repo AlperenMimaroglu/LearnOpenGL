@@ -150,6 +150,11 @@ int main()
     lightingShader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
     lightingShader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
+    lightingShader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    lightingShader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    lightingShader.SetVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    lightingShader.SetFloat("material.shininess", 32.0f);
+
     Shader lightCubeShader("vertex.glsl", "light.glsl");
 
     // "Render loop" 
@@ -183,7 +188,6 @@ int main()
 
         lightingShader.SetVec3("viewPos", camera.Position);
         lightingShader.SetVec3("lightPos", lightPos);
-
 
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
