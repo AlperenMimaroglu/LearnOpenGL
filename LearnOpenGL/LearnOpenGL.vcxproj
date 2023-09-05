@@ -92,6 +92,7 @@
   <ItemGroup>
     <Content Include="awesomeface.png" />
     <Content Include="container.jpg" />
+    <Content Include="container2.png" />
     <Content Include="fragment.glsl" />
     <Content Include="light.glsl" />
     <Content Include="vertex.glsl" />
