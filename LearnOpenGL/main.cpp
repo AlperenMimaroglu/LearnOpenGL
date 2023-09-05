@@ -147,8 +147,7 @@ int main()
     glEnableVertexAttribArray(0);
 
     lightingShader.Use();
-    lightingShader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
-    lightingShader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    lightingShader.SetVec3("light.specular", glm::vec3(1.0f));
 
     lightingShader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
     lightingShader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
@@ -156,6 +155,7 @@ int main()
     lightingShader.SetFloat("material.shininess", 32.0f);
 
     Shader lightCubeShader("vertex.glsl", "light.glsl");
+    // lightCubeShader.SetVec3("lightColor")
 
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
@@ -178,6 +178,17 @@ int main()
         // activate shader
         lightingShader.Use();
 
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+        lightingShader.SetVec3("light.ambient", ambientColor);
+        lightingShader.SetVec3("light.diffuse", diffuseColor);
+
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         lightingShader.SetMat4("model", model);
 
@@ -199,6 +210,8 @@ int main()
 
         // Light Cube
         lightCubeShader.Use();
+
+        lightCubeShader.SetVec3("lightColor", diffuseColor);
 
         model = glm::mat4(1.0f);
         lightPos.x = (cos(currentFrame * 2) * 2);
