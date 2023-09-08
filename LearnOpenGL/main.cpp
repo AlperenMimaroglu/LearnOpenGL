@@ -170,6 +170,10 @@ int main()
     lightingShader.SetFloat("light.linear", 0.09f);
     lightingShader.SetFloat("light.quadratic", 0.0032f);
 
+    lightingShader.SetFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+    lightingShader.SetFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+
     Shader lightCubeShader("vertex.glsl", "light.glsl");
     // lightCubeShader.SetVec3("lightColor")
 
@@ -188,7 +192,7 @@ int main()
 
         // render
         // ------
-        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // activate shader
@@ -206,9 +210,11 @@ int main()
         lightingShader.SetMat4("projection", projection);
 
         lightingShader.SetVec3("viewPos", camera.Position);
-        lightingShader.SetVec3("light.position", lightPos);
-        lightingShader.SetVec3("light.diffuse", diffuseColor);
 
+        lightingShader.SetVec3("light.position", camera.Position);
+        lightingShader.SetVec3("light.diffuse", diffuseColor);
+        lightingShader.SetVec3("light.direction", camera.Front);
+        
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.SetMat4("view", view);
