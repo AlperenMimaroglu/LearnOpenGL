@@ -166,6 +166,9 @@ int main()
     lightingShader.SetFloat("material.shininess", 32.0f);
 
     lightingShader.SetVec3("light.specular", glm::vec3(1.0f));
+    lightingShader.SetFloat("light.constant", 1.0f);
+    lightingShader.SetFloat("light.linear", 0.09f);
+    lightingShader.SetFloat("light.quadratic", 0.0032f);
 
     Shader lightCubeShader("vertex.glsl", "light.glsl");
     // lightCubeShader.SetVec3("lightColor")
@@ -203,7 +206,7 @@ int main()
         lightingShader.SetMat4("projection", projection);
 
         lightingShader.SetVec3("viewPos", camera.Position);
-        lightingShader.SetVec3("light.direction", -0.2f, -1.0f, -0.3);
+        lightingShader.SetVec3("light.position", lightPos);
         lightingShader.SetVec3("light.diffuse", diffuseColor);
 
         // camera/view transformation
