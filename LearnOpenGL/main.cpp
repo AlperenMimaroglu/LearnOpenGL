@@ -5,11 +5,13 @@
 
 #include "Shader.h"
 #include "stb_image.h"
-#include "Texture.h"
+#include "TextureItem.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <assimp/aabb.h>
 
 #include "camera.h"
 

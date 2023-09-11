@@ -1,12 +1,8 @@
 ﻿#pragma once
+#include <string>
 
-#include "stb_image.h"
-
-class Texture
+struct Texture
 {
-public:
-   unsigned int ID;
-   
-   Texture(); 
-   void Load(const char* path, bool generateMipMap);
+    unsigned int id;
+    std::string type;
 };
