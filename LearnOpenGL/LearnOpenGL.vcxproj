@@ -101,6 +101,14 @@
     <Content Include="fragment.glsl" />
     <Content Include="light.glsl" />
     <Content Include="matrix.jpg" />
+    <Content Include="Resources\Backpack\ao.jpg" />
+    <Content Include="Resources\Backpack\backpack.mtl" />
+    <Content Include="Resources\Backpack\backpack.obj" />
+    <Content Include="Resources\Backpack\diffuse.jpg" />
+    <Content Include="Resources\Backpack\normal.png" />
+    <Content Include="Resources\Backpack\roughness.jpg" />
+    <Content Include="Resources\Backpack\source_attribution.txt" />
+    <Content Include="Resources\Backpack\specular.jpg" />
     <Content Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
