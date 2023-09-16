@@ -4,11 +4,11 @@
 
 #include <iostream>
 
-Texture::Texture()
+TextureItem::TextureItem()
 {
 }
 
-void Texture::Load(const char* path, bool generateMipMap)
+void TextureItem::Load(const char* path, bool generateMipMap)
 {
     unsigned int texture;
     glGenTextures(1, &texture);

@@ -2,11 +2,11 @@
 
 #include "stb_image.h"
 
-class Texture
+class TextureItem
 {
 public:
    unsigned int ID;
    
-   Texture(); 
+   TextureItem(); 
    void Load(const char* path, bool generateMipMap);
 };

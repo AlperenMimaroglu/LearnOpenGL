@@ -162,10 +162,10 @@ int main()
         glm::vec3(0.0f, 0.0f, -3.0f)
     };
 
-    Texture diffuseMap;
+    TextureItem diffuseMap;
     diffuseMap.Load("container2.png", true);
 
-    Texture specularMap;
+    TextureItem specularMap;
     specularMap.Load("container2_specular.png", true);
 
     lightingShader.Use();
