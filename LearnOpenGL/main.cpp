@@ -14,6 +14,7 @@
 #include <assimp/aabb.h>
 
 #include "camera.h"
+#include "Model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
@@ -67,6 +68,8 @@ int main()
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     glEnable(GL_DEPTH_TEST);
+    
+    stbi_set_flip_vertically_on_load(true);
 
     Shader lightingShader("vertex.glsl", "fragment.glsl");
 
@@ -169,10 +172,13 @@ int main()
     specularMap.Load("container2_specular.png", true);
 
     lightingShader.Use();
-    lightingShader.SetInt("material.diffuse", 0);
-    lightingShader.SetInt("material.specular", 1);
+    // lightingShader.SetInt("material.diffuse", 0);
+    // lightingShader.SetInt("material.specular", 1);
 
     Shader lightCubeShader("vertex.glsl", "light.glsl");
+
+    
+    Model backpackModel("Resources/Backpack/backpack.obj");
 
     // "Render loop" 
     while (!glfwWindowShouldClose(window))
@@ -262,27 +268,15 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         lightingShader.SetMat4("model", model);
 
-        // bind diffuse map
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap.ID);
-        // bind specular map
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap.ID);
+        // // bind diffuse map
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, diffuseMap.ID);
+        // // bind specular map
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, specularMap.ID);
 
-        // render containers
-        glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            // calculate the model matrix for each object and pass it to shader before drawing
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            lightingShader.SetMat4("model", model);
-
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-
+        backpackModel.Draw(lightingShader);
+        
         // also draw the lamp object(s)
         lightCubeShader.Use();
         lightCubeShader.SetMat4("projection", projection);
