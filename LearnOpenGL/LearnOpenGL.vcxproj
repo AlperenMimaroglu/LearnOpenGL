@@ -825,7 +825,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="resources\awesomeface.png" />
     <Content Include="resources\Backpack\ao.jpg" />
     <Content Include="resources\Backpack\backpack.mtl" />
     <Content Include="resources\Backpack\backpack.obj" />
@@ -834,13 +833,73 @@
     <Content Include="resources\Backpack\roughness.jpg" />
     <Content Include="resources\Backpack\source_attribution.txt" />
     <Content Include="resources\Backpack\specular.jpg" />
-    <Content Include="resources\container.jpg" />
-    <Content Include="resources\container2.png" />
-    <Content Include="resources\container2_specular.png" />
-    <Content Include="resources\matrix.jpg" />
+    <Content Include="resources\shader\depth_test\depth_testing.vs" />
     <Content Include="resources\shader\fragment.glsl" />
     <Content Include="resources\shader\light.glsl" />
     <Content Include="resources\shader\vertex.glsl" />
+    <Content Include="resources\textures\awesomeface.png" />
+    <Content Include="resources\textures\background.jpg" />
+    <Content Include="resources\textures\block.png" />
+    <Content Include="resources\textures\block_solid.png" />
+    <Content Include="resources\textures\bricks2.jpg" />
+    <Content Include="resources\textures\bricks2_disp.jpg" />
+    <Content Include="resources\textures\bricks2_normal.jpg" />
+    <Content Include="resources\textures\brickwall.jpg" />
+    <Content Include="resources\textures\brickwall_normal.jpg" />
+    <Content Include="resources\textures\concreteTexture.png" />
+    <Content Include="resources\textures\container.jpg" />
+    <Content Include="resources\textures\container2.png" />
+    <Content Include="resources\textures\container2_specular.png" />
+    <Content Include="resources\textures\container2_specular_colored.png" />
+    <Content Include="resources\textures\grass.png" />
+    <Content Include="resources\textures\hdr\newport_loft.hdr" />
+    <Content Include="resources\textures\marble.jpg" />
+    <Content Include="resources\textures\matrix.jpg" />
+    <Content Include="resources\textures\metal.png" />
+    <Content Include="resources\textures\paddle.png" />
+    <Content Include="resources\textures\particle.png" />
+    <Content Include="resources\textures\pbr\gold\albedo.png" />
+    <Content Include="resources\textures\pbr\gold\ao.png" />
+    <Content Include="resources\textures\pbr\gold\metallic.png" />
+    <Content Include="resources\textures\pbr\gold\normal.png" />
+    <Content Include="resources\textures\pbr\gold\roughness.png" />
+    <Content Include="resources\textures\pbr\grass\albedo.png" />
+    <Content Include="resources\textures\pbr\grass\ao.png" />
+    <Content Include="resources\textures\pbr\grass\metallic.png" />
+    <Content Include="resources\textures\pbr\grass\normal.png" />
+    <Content Include="resources\textures\pbr\grass\roughness.png" />
+    <Content Include="resources\textures\pbr\plastic\albedo.png" />
+    <Content Include="resources\textures\pbr\plastic\ao.png" />
+    <Content Include="resources\textures\pbr\plastic\metallic.png" />
+    <Content Include="resources\textures\pbr\plastic\normal.png" />
+    <Content Include="resources\textures\pbr\plastic\roughness.png" />
+    <Content Include="resources\textures\pbr\rusted_iron\albedo.png" />
+    <Content Include="resources\textures\pbr\rusted_iron\ao.png" />
+    <Content Include="resources\textures\pbr\rusted_iron\metallic.png" />
+    <Content Include="resources\textures\pbr\rusted_iron\normal.png" />
+    <Content Include="resources\textures\pbr\rusted_iron\roughness.png" />
+    <Content Include="resources\textures\pbr\wall\albedo.png" />
+    <Content Include="resources\textures\pbr\wall\ao.png" />
+    <Content Include="resources\textures\pbr\wall\metallic.png" />
+    <Content Include="resources\textures\pbr\wall\normal.png" />
+    <Content Include="resources\textures\pbr\wall\roughness.png" />
+    <Content Include="resources\textures\powerup_chaos.png" />
+    <Content Include="resources\textures\powerup_confuse.png" />
+    <Content Include="resources\textures\powerup_increase.png" />
+    <Content Include="resources\textures\powerup_passthrough.png" />
+    <Content Include="resources\textures\powerup_speed.png" />
+    <Content Include="resources\textures\powerup_sticky.png" />
+    <Content Include="resources\textures\skybox\back.jpg" />
+    <Content Include="resources\textures\skybox\bottom.jpg" />
+    <Content Include="resources\textures\skybox\front.jpg" />
+    <Content Include="resources\textures\skybox\left.jpg" />
+    <Content Include="resources\textures\skybox\right.jpg" />
+    <Content Include="resources\textures\skybox\top.jpg" />
+    <Content Include="resources\textures\toy_box_diffuse.png" />
+    <Content Include="resources\textures\toy_box_disp.png" />
+    <Content Include="resources\textures\toy_box_normal.png" />
+    <Content Include="resources\textures\window.png" />
+    <Content Include="resources\textures\wood.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
@@ -852,6 +911,9 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureItem.h" />
     <ClInclude Include="src\Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="resources\shader\depth_test\depth_testing.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
